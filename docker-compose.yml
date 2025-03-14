@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # Porta para conexões AMQP
+      - "15672:15672"  # Porta para a interface de gerenciamento web
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - rabbitmq_network
+
+  app:
+    image: node:16
+    container_name: app
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://root:root@rabbitmq
+    networks:
+      - rabbitmq_network
+    command: sh -c "npm install && npm start"
+
+volumes:
+  rabbitmq_data:
+    driver: local
+
+networks:
+  rabbitmq_network:
+    driver: bridge
