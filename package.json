@@ -4,10 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:consumer": "nodemon src/consumer.js",
-    "start:producer": "nodemon src/producer.js",
-    "start:server": "nodemon src/server.js",
-    "dev:server": "concurrently \"nodemon src/server.js\" \"nodemon src/consumer.js\""
+    "start:consumer": "nodemon src/rabbit_mq/consumer.js",
+    "start:producer": "nodemon src/rabbit_mq/producer.js",
+    "start:server": "nodemon src/app.js",
+    "dev:server": "concurrently \"nodemon src/app.js\" \"nodemon src/rabbit_mq/consumer.js\""
   },
   "keywords": [],
   "author": "",
