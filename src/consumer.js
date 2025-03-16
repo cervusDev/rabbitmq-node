@@ -1,28 +1,27 @@
-import { connect } from 'amqplib';
+import * as amqplib from 'amqplib';
+import * as dotenv from 'dotenv';
 
-const connectUrl = "amqp://root:root@localhost";
+dotenv.config();
 
 async function receiveMessage() {
     try {
-        const connection = await connect(connectUrl);
+        const connection = await amqplib.connect("amqp://root:root@localhost");
         const channel = await connection.createChannel();
-        const queue = 'hello';
+        const queue = 'send_messages_queues';
 
         await channel.assertQueue(queue, { durable: false });
 
         console.log(` [*] Waiting for messages in ${queue}. To exit press CTRL+C`);
 
-        // Consome mensagens da fila
         channel.consume(queue, (msg) => {
             if (msg !== null) {
                 console.log(` [x] Received '${msg.content.toString()}'`);
-                channel.ack(msg); // Confirma o processamento da mensagem
+                channel.ack(msg);
             }
-        }, { noAck: false }); // noAck: false -> Requer confirmação (ack) manual
+        }, { noAck: false });
     } catch (error) {
         console.error("Erro no consumer:", error.message);
     }
 }
 
-// Inicia o consumer
 receiveMessage();

@@ -1,12 +1,13 @@
 import * as amqplib from "amqplib";
+import * as dotenv from 'dotenv';
 
-const connectUrl = "amqp://root:root@localhost";
+dotenv.config();
 
-const sendMessage = async message => {
+export const sendMessage = async message => {
   try {
-    const connection = await amqplib.connect(connectUrl);
+    const connection = await amqplib.connect(process.env.RABBIT_MQ);
     const channel = await connection.createChannel();
-    const queue = "hello";
+    const queue = "send_messages_queues";
 
     await channel.assertQueue(queue, { durable: false });
 
@@ -17,8 +18,6 @@ const sendMessage = async message => {
   } catch (err) {
     console.log("Problema ao realizar a conexão!");
     console.log(err);
+    throw err;
   }
 };
-
-const message = process.argv.slice(2).join(' ') || 'Hello, RabbitMQ!';
-sendMessage(message);

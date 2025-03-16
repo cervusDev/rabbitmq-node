@@ -1,0 +1,1 @@
+export const connectUrl = "amqp://root:root@localhost";
