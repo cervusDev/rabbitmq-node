@@ -1,13 +1,13 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import { router as messageRouter } from "./routes/message_router.js";
+import { postMessage } from "./controllers/message_controller.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-app.use("/api/message", messageRouter);
+app.post("/send-message", postMessage);
 
 const startServer = async () => {
   try {
