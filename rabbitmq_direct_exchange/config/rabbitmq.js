@@ -1,15 +1,14 @@
 import * as dotenv from 'dotenv';
 import * as amqplib from 'amqplib';
-import { queueKey } from '../utils/enviroments.js';
 
 dotenv.config();
 
-const connectRabbitMQ = async () => {
+const connectRabbitMQExchange = async () => {
   try {
      const connection = await amqplib.connect(process.env.RABBIT_MQ);
      const channel = await connection.createChannel();
 
-     await channel.assertQueue(queueKey, { durable: false });
+     await channel.assertExchange(process.env.EXCHANGE, 'direct',{ durable: false });
 
      return { connection, channel };
   } catch (err) {
@@ -18,4 +17,4 @@ const connectRabbitMQ = async () => {
   }
 };
 
-export { connectRabbitMQ }
+export { connectRabbitMQExchange }
